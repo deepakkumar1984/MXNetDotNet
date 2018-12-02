@@ -1,7 +1,11 @@
-﻿namespace MXNetDotNet.Extensions
+﻿using MXNetDotNet.Interop;
+using MXNetDotNet.Numerics;
+using System;
+
+namespace MXNetDotNet.Extensions
 {
 
-    internal static class ObjectExtensions
+    public static class ObjectExtensions
     {
 
         public static string ToValueString(this object source)

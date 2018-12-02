@@ -156,7 +156,7 @@ namespace MXNetDotNet
         public void TocPrint()
         {
             var results = this.Toc();
-            var data = new List<float>(1);
+            float[] data = new float[1];
             foreach (var stat in results)
             {
                 var ndarray = stat.Item3;

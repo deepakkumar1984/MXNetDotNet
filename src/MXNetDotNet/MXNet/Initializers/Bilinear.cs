@@ -9,7 +9,7 @@ namespace MXNetDotNet
 
         public override void Operator(string name, NDArray array)
         {
-            base.InitBilinear(array);
+             base.InitBilinear(array);
         }
 
         #endregion

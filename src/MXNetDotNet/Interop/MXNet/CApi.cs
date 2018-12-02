@@ -11,6 +11,7 @@ using mx_uint = System.UInt32;
 using mx_float = System.Single;
 
 using ExecutorMonitorCallback = System.IntPtr;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace MXNetDotNet.Interop
@@ -164,10 +165,17 @@ namespace MXNetDotNet.Interop
         /// <param name="data">the data source to copy into.</param>
         /// <param name="size">the memory size we want to copy into.</param>
         /// <returns></returns>
-        [DllImport(NativeLibrary, CallingConvention = CallingConvention)]
-        public static extern int MXNDArraySyncCopyToCPU(NDArrayHandle handle,
-                                                        mx_float[] data,
-                                                        size_t size);
+        //[DllImport(NativeLibrary, CallingConvention = CallingConvention)]
+        //public static extern int MXNDArraySyncCopyToCPU(NDArrayHandle handle,
+        //                                                mx_float[] data,
+        //                                                size_t size);
+
+        /// Return Type: int
+        ///handle: NDArrayHandle->void*
+        ///data: void*
+        ///size: size_t->unsigned int
+        [DllImport(NativeLibrary, EntryPoint = "MXNDArraySyncCopyToCPU", CallingConvention = CallingConvention)]
+        public static extern int MXNDArraySyncCopyToCPU(IntPtr handle, IntPtr data, size_t size);
 
         /// <summary>
         /// wait until all delayed operations in the system is completed

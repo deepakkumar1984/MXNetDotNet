@@ -13,7 +13,7 @@ namespace MXNetDotNet
 
         #region Fields
 
-        private const int StackCache = 5;
+        private const int StackCache = 4;
 
         #endregion
 
@@ -95,8 +95,9 @@ namespace MXNetDotNet
             {
                 size_t size = 1;
                 var data = this._Data;
+
                 for (var index = 0; index < this._Dimension; index++)
-                    size += data[index];
+                    size *= data[index];
 
                 return size;
             }
@@ -197,3 +198,4 @@ namespace MXNetDotNet
     }
 
 }
+

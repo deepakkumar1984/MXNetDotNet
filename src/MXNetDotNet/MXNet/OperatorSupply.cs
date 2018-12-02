@@ -4,12 +4,17 @@
 namespace MXNetDotNet
 {
 
-    internal static class OperatorSupply
+    public static class OperatorSupply
     {
 
         public static Symbol Plus(Symbol lhs, Symbol rhs)
         {
             return new Operator("_Plus").Set(lhs, rhs).CreateSymbol();
+        }
+
+        public static Symbol Sum(this Symbol lhs)
+        {
+            return new Operator("_Plus").Set(lhs).CreateSymbol();
         }
 
         public static Symbol Mul(Symbol lhs, Symbol rhs)

@@ -10,6 +10,7 @@ using NDArrayHandle = System.IntPtr;
 using mx_uint = System.UInt32;
 using mx_float = System.Single;
 using size_t = System.UInt64;
+using MXNetDotNet.Numerics;
 
 // ReSharper disable once CheckNamespace
 namespace MXNetDotNet
@@ -20,7 +21,7 @@ namespace MXNetDotNet
 
         #region Fields
 
-        private readonly NDBlob _Blob;
+        internal readonly NDBlob _Blob;
 
         #endregion
 
@@ -294,21 +295,30 @@ namespace MXNetDotNet
 
         public void SyncCopyToCPU(mx_float[] data)
         {
-            NativeMethods.MXNDArraySyncCopyToCPU(this._Blob.Handle, data, (uint)data.Length);
+            SyncCopyToCPU(data, 0);
         }
 
-        public void SyncCopyToCPU(List<mx_float> data, size_t size = 0)
+        public void SyncCopyToCPU(mx_float[] data, int size = 0)
         {
             var resize = size > 0;
-            size = resize ? size : this.Size;
+            size = resize ? size : this.GetShape().Count();
+            data = new float[size];
+            var datagch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            NativeMethods.MXNDArraySyncCopyToCPU(this._Blob.Handle, datagch.AddrOfPinnedObject(), (ulong)size);
 
-            var args = new mx_float[size];
-            NativeMethods.MXNDArraySyncCopyToCPU(this._Blob.Handle, args, (uint)args.Length);
-
-            data.Clear();
-            data.Capacity = args.Length;
-            data.AddRange(args);
+            datagch.Free();
         }
+
+        public float[] AsArray()
+        {
+            ulong size = this.Size;
+            var data = new float[size];
+            var datagch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            NativeMethods.MXNDArraySyncCopyToCPU(_Blob.Handle, datagch.AddrOfPinnedObject(), size);
+            datagch.Free();
+            return data;
+        }
+
 
         public static void WaitAll()
         {
@@ -475,15 +485,20 @@ namespace MXNetDotNet
 
         #endregion
 
+        
+
         public override string ToString()
         {
             var shape = this.GetShape();
+            var array = new float[this.Size];
+            IntPtr pointer = GCHandle.Alloc(array, GCHandleType.Pinned).AddrOfPinnedObject();
             using (var tmp = new NDArray(shape, Context.Cpu()))
             {
                 var cpuArray = tmp;
                 if (this.GetContext().GetDeviceType() != DeviceType.GPU)
                 {
                     cpuArray = this;
+                    NativeMethods.MXNDArraySyncCopyToCPU(cpuArray._Blob.Handle, pointer, Size);
                 }
                 else
                 {
@@ -491,12 +506,13 @@ namespace MXNetDotNet
                     this.CopyTo(cpuArray);
                 }
 
+                
                 var @out = new StringBuilder();
                 @out.Append('[');
                 cpuArray.WaitToRead();
-                var data = cpuArray.GetData();
-                var array = new float[this.Size];
-                Marshal.Copy(data, array, 0, array.Length);
+                //var data = cpuArray.GetData();
+                
+                Marshal.Copy(pointer, array, 0, array.Length);
                 @out.Append(string.Join(", ", array.Select(f => f.ToString(CultureInfo.InvariantCulture))));
                 @out.Append(']');
 

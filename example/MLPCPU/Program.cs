@@ -2,10 +2,12 @@
  * This sample program is ported by C# from incubator-mxnet/blob/master/cpp-package/example/mlp_cpu.cpp.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MXNetDotNet;
+using MXNetDotNet.Extensions;
 
 namespace MLPCPU
 {
