@@ -16,7 +16,7 @@ using MXNetDotNet.Numerics;
 namespace MXNetDotNet
 {
 
-    public sealed class NDArray : DisposableMXNetObject
+    public partial class NDArray : DisposableMXNetObject
     {
 
         #region Fields

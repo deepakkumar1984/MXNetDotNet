@@ -12,8 +12,13 @@ namespace MXNetDotNet.Tests.MXNet
         [TestMethod]
         public void TestMath()
         {
-            NDArray array1 = new NDArray(new float[] { 4, 2 }, new Shape(2, 1), Context.Cpu());
-            NDArray array2 = new NDArray(new float[] { 3, 4 }, new Shape(2), Context.Cpu());
+            NDArray array1 = new NDArray(new float[] { 4, 2 }, new Shape(2), Context.Cpu());
+            NDArray array2 = new NDArray(new float[] { 3.23f, 4 }, new Shape(2), Context.Cpu());
+
+            array2 = NDArray.Cast(array2, DType.Int32);
+            var arr1 = array1.AsArray();
+            var arr2 = array2.AsArray();
+
             List<float> result = new List<float>();
             Symbol a = Symbol.Variable("a");
 
