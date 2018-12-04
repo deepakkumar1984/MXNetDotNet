@@ -105,7 +105,7 @@ namespace MXNetDotNet
             }
             else
             {
-                this._States[index] = new NDArray(weight.GetShape(), weight.GetContext());
+                this._States[index] = new NDArray(weight.GetShape());
                 this._States[index].Set(0);
             }
         }

@@ -25,7 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MXNetDotNet\MXNetDotNet.csproj" />
+    <ProjectReference Include="..\..\SiaDNN\SiaNet.csproj" />
   </ItemGroup>
 
 </Project>

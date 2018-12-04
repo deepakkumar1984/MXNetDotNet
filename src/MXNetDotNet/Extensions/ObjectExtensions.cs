@@ -1,5 +1,4 @@
 ﻿using MXNetDotNet.Interop;
-using MXNetDotNet.Numerics;
 using System;
 
 namespace MXNetDotNet.Extensions

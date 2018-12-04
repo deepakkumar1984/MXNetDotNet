@@ -17,7 +17,7 @@ namespace SiaNet.Layers.Activations
         {
             return new Operator("Activation").SetParam("act_type", "relu")
                                             .SetInput("data", x)
-                                            .CreateSymbol(ID);
+                                            .CreateSymbol();
         }
     }
 }

@@ -94,11 +94,11 @@ namespace MXNetDotNet
 
         protected override void CreateState(int index, NDArray weight)
         {
-            this._N[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._N[index] = new NDArray(weight.GetShape());
             this._N[index].Set(0);
-            this._G[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._G[index] = new NDArray(weight.GetShape());
             this._G[index].Set(0);
-            this._Delta[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._Delta[index] = new NDArray(weight.GetShape());
             this._Delta[index].Set(0);
         }
 

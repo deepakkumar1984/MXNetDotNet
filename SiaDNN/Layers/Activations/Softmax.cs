@@ -16,7 +16,7 @@ namespace SiaNet.Layers.Activations
         public Symbol Build(Symbol x)
         {
             return new Operator("SoftmaxActivation").SetInput("data", x)
-                                            .CreateSymbol(ID);
+                                            .CreateSymbol();
         }
     }
 }

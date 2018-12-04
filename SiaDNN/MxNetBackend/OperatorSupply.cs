@@ -51,6 +51,11 @@ namespace MXNetDotNet
             return new Operator("_Minimum").Set(lhs, rhs).CreateSymbol();
         }
 
+        public static Symbol Log(Symbol data)
+        {
+            return new Operator("log").SetInput("data", data).CreateSymbol();
+        }
+
         public static Symbol PlusScalar(Symbol lhs, mx_float scalar)
         {
             return new Operator("_PlusScalar").Set(lhs)
@@ -133,6 +138,37 @@ namespace MXNetDotNet
             return new Operator("_MinimumScalar").Set(lhs)
                      .SetParam("scalar", scalar)
                      .CreateSymbol();
+        }
+
+        public static Symbol Abs(Symbol data)
+        {
+            return new Operator("abs").Set(data)
+                     .CreateSymbol();
+        }
+
+        public static Symbol Clip(Symbol data, float min, float max)
+        {
+            return new Operator("clip").Set(data)
+                     .SetParam("a_min", min)
+                     .SetParam("a_max", max)
+                     .CreateSymbol();
+        }
+
+        public static Symbol Mean(Symbol data, Shape axis = null, bool keepdims = false, bool exclude = false)
+        {
+            return new Operator("mean")
+            .SetParam("axis", axis)
+            .SetParam("keepdims", keepdims)
+            .SetParam("exclude", exclude)
+            .SetInput("data", data)
+            .CreateSymbol();
+        }
+
+        public static Symbol Square(Symbol data)
+        {
+            return new Operator("square")
+            .SetInput("data", data)
+            .CreateSymbol();
         }
     }
 }

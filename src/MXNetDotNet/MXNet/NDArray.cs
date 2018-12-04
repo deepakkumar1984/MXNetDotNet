@@ -10,7 +10,6 @@ using NDArrayHandle = System.IntPtr;
 using mx_uint = System.UInt32;
 using mx_float = System.Single;
 using size_t = System.UInt64;
-using MXNetDotNet.Numerics;
 
 // ReSharper disable once CheckNamespace
 namespace MXNetDotNet

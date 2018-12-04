@@ -98,9 +98,9 @@ namespace MXNetDotNet
 
         protected override void CreateState(int index, NDArray weight)
         {
-            this._Mean[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._Mean[index] = new NDArray(weight.GetShape());
             this._Mean[index].Set(0);
-            this._Var[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._Var[index] = new NDArray(weight.GetShape());
             this._Var[index].Set(0);
         }
 

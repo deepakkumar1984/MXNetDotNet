@@ -5,10 +5,10 @@ using System.Text;
 
 namespace SiaNet.Layers.Activations
 {
-    public class SoftRelu : BaseLayer, ILayer
+    public class Softplus : BaseLayer, ILayer
     {
-        public SoftRelu()
-            : base("softrelu")
+        public Softplus()
+            : base("softplus")
         {
 
         }

@@ -100,9 +100,9 @@ namespace MXNetDotNet
 
         protected override void CreateState(int index, NDArray weight)
         {
-            this._AccG[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._AccG[index] = new NDArray(weight.GetShape());
             this._AccG[index].Set(0);
-            this._AccDelta[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._AccDelta[index] = new NDArray(weight.GetShape());
             this._AccDelta[index].Set(0);
         }
 

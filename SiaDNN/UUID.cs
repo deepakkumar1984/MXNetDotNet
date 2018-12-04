@@ -6,21 +6,27 @@ namespace SiaNet
 {
     public class UUID
     {
-        private static int CurrentIndex { get; set; }
+        private static Dictionary<string, int> CurrentIndexes = new Dictionary<string, int>();
 
         public static void Reset()
         {
-            CurrentIndex = 0;
+            CurrentIndexes = new Dictionary<string, int>();
         }
 
-        public static int Next()
+        private static int Next(string name)
         {
-            return CurrentIndex++;
+            if(!CurrentIndexes.ContainsKey(name))
+            {
+                CurrentIndexes.Add(name, 0);
+            }
+
+            CurrentIndexes[name] += 1;
+            return CurrentIndexes[name];
         }
 
         public static string GetID(string name)
         {
-            return string.Format("{0}_{1}", name.ToLower(), Next());
+            return string.Format("{0}_{1}", name.ToLower(), Next(name));
         }
     }
 }

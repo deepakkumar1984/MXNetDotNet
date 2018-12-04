@@ -7,6 +7,8 @@ namespace MXNetDotNet
 
         #region Methods
 
+        public uint BatchSize { get; set; }
+
         public abstract void BeforeFirst();
 
         public abstract NDArray GetData();

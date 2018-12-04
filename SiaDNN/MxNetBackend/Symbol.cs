@@ -242,7 +242,7 @@ namespace MXNetDotNet
                 }
                 else
                 {
-                    var array = new NDArray(shape.ToArray(), context, false);
+                    var array = new NDArray(shape.ToArray(), false);
                     argsMap[argName] = array;
                     NDArray.SampleGaussian(0, 1, array);
                 }
@@ -439,7 +439,7 @@ namespace MXNetDotNet
                 }
                 else
                 {
-                    argArrays.Add(new NDArray(shape, context, false));
+                    argArrays.Add(new NDArray(shape, false));
                     NDArray.SampleGaussian(0, 1, argArrays.Last());
                 }
 
@@ -449,7 +449,7 @@ namespace MXNetDotNet
                 }
                 else
                 {
-                    gradArrays.Add(new NDArray(shape, context, false));
+                    gradArrays.Add(new NDArray(shape, false));
                 }
 
                 if (gradReqType.TryGetValue(argName, out var value3))
@@ -478,7 +478,7 @@ namespace MXNetDotNet
                 }
                 else
                 {
-                    auxArrays.Add(new NDArray(shape, context, false));
+                    auxArrays.Add(new NDArray(shape, false));
                     NDArray.SampleGaussian(0, 1, auxArrays.Last());
                 }
             }

@@ -78,7 +78,7 @@ namespace MXNetDotNet
 
         protected override void CreateState(int index, NDArray weight)
         {
-            this._History[index] = new NDArray(weight.GetShape(), weight.GetContext());
+            this._History[index] = new NDArray(weight.GetShape());
             this._History[index].Set(0);
         }
 

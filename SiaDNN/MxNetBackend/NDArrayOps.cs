@@ -149,7 +149,7 @@ namespace MXNetDotNet
             }
 
 
-            NDArray rhsArray = new NDArray(rhsdata, new Shape(lhs.GetShape()), GlobalParam.Device);
+            NDArray rhsArray = new NDArray(rhsdata, new Shape(lhs.GetShape()));
 
             return new Operator("_greater_equal")
             .SetInput("lhs", lhs)

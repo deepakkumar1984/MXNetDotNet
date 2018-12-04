@@ -1,9 +1,10 @@
 ﻿using MXNetDotNet;
+using SiaNet;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiaDNN
+namespace SiaNet
 {
     public class Optimizers
     {
@@ -67,6 +68,36 @@ namespace SiaDNN
             opt.SetParam("beta1", beta_1);
             opt.SetParam("beta2", beta_2);
             opt.SetParam("epsilon", 1e-8);
+
+            return opt;
+        }
+
+        internal static Optimizer Get(OptimizerType optimizerType)
+        {
+            Optimizer opt = null;
+            switch (optimizerType)
+            {
+                case OptimizerType.SGD:
+                    opt = SGD();
+                    break;
+                case OptimizerType.Signum:
+                    opt = Signum();
+                    break;
+                case OptimizerType.RMSprop:
+                    opt = RMSprop();
+                    break;
+                case OptimizerType.Adagrad:
+                    opt = Adagrad();
+                    break;
+                case OptimizerType.Adadelta:
+                    opt = Adadelta();
+                    break;
+                case OptimizerType.Adam:
+                    opt = Adam();
+                    break;
+                default:
+                    break;
+            }
 
             return opt;
         }

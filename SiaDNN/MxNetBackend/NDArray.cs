@@ -22,6 +22,8 @@ namespace MXNetDotNet
 
         internal readonly NDBlob _Blob;
 
+        public Context context = SiaNet.GlobalParam.Device;
+
         #endregion
 
         #region Constructors
@@ -43,13 +45,10 @@ namespace MXNetDotNet
             this._Blob = new NDBlob(handle);
         }
 
-        public NDArray(IList<mx_uint> shape, Context context, bool delayAlloc = true)
+        public NDArray(IList<mx_uint> shape, bool delayAlloc = true)
         {
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
 
             var floats = shape as mx_uint[];
             var arg = floats ?? shape.ToArray();
@@ -64,12 +63,10 @@ namespace MXNetDotNet
             this._Blob = new NDBlob(@out);
         }
 
-        public NDArray(Shape shape, Context context, bool delayAlloc = true)
+        public NDArray(Shape shape, bool delayAlloc = true)
         {
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
 
             Logging.CHECK_EQ(NativeMethods.MXNDArrayCreate(shape.Data,
                                                            shape.Dimension,
@@ -81,14 +78,12 @@ namespace MXNetDotNet
             this._Blob = new NDBlob(@out);
         }
 
-        public NDArray(mx_float[] data, Shape shape, Context context)
+        public NDArray(mx_float[] data, Shape shape)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
             if (shape == null)
                 throw new ArgumentNullException(nameof(shape));
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
 
             Logging.CHECK_EQ(NativeMethods.MXNDArrayCreate(shape.Data,
                                                            (uint)shape.Dimension,
@@ -103,8 +98,8 @@ namespace MXNetDotNet
             this._Blob = new NDBlob(@out);
         }
 
-        public NDArray(IList<mx_float> data, Shape shape, Context context)
-            : this(data?.ToArray(), shape, context)
+        public NDArray(IList<mx_float> data, Shape shape)
+            : this(data?.ToArray(), shape)
         {
         }
 
@@ -151,12 +146,9 @@ namespace MXNetDotNet
             return ret;
         }
 
-        public NDArray Copy(Context context)
+        public NDArray Copy()
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-
-            var ret = new NDArray(this.GetShape(), context);
+            var ret = new NDArray(this.GetShape());
             using (var op = new Operator("_copyto"))
                 op.Set(this).Invoke(ret);
 
@@ -491,7 +483,7 @@ namespace MXNetDotNet
             var shape = this.GetShape();
             var array = new float[this.Size];
             IntPtr pointer = GCHandle.Alloc(array, GCHandleType.Pinned).AddrOfPinnedObject();
-            using (var tmp = new NDArray(shape, Context.Cpu()))
+            using (var tmp = new NDArray(shape))
             {
                 var cpuArray = tmp;
                 if (this.GetContext().GetDeviceType() != DeviceType.GPU)

@@ -8,6 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using MXNetDotNet;
 using MXNetDotNet.Extensions;
+using SiaDNN.Initializers;
+using SiaNet;
+using SiaNet.Layers;
+using SiaNet.Layers.Activations;
+using SiaNet.Metrics;
 
 namespace MLPCPU
 {
@@ -25,7 +30,7 @@ namespace MLPCPU
             const int maxEpoch = 10;
             const float learningRate = 0.1f;
             const float weightDecay = 1e-2f;
-
+            
             var trainIter = new MXDataIter("MNISTIter")
                 .SetParam("image", "./mnist_data/train-images-idx3-ubyte")
                 .SetParam("label", "./mnist_data/train-labels-idx1-ubyte")
@@ -41,16 +46,16 @@ namespace MLPCPU
 
             var net = Mlp(layers);
 
-            Context ctx = Context.Cpu();  // Use CPU for training
+            GlobalParam.Device = Context.Cpu();  // Use CPU for training
 
             var args = new SortedDictionary<string, NDArray>();
-            args["X"] = new NDArray(new Shape(batchSize, imageSize * imageSize), ctx);
-            args["label"] = new NDArray(new Shape(batchSize), ctx);
+            args["X"] = new NDArray(new Shape(batchSize, imageSize * imageSize));
+            args["label"] = new NDArray(new Shape(batchSize));
             // Let MXNet infer shapes other parameters such as weights
-            net.InferArgsMap(ctx, args, args);
+            net.InferArgsMap(GlobalParam.Device, args, args);
 
             // Initialize all parameters with uniform distribution U(-0.01, 0.01)
-            var initializer = new Uniform(0.01f);
+            var initializer = new RandomUniform();
             foreach (var arg in args)
             {
                 // arg.first is parameter name, and arg.second is the value
@@ -64,7 +69,7 @@ namespace MLPCPU
                .SetParam("wd", weightDecay);
 
             // Create executor by binding parameters to the model
-            using (var exec = net.SimpleBind(ctx, args))
+            using (var exec = net.SimpleBind(GlobalParam.Device, args))
             {
                 var argNames = net.ListArguments();
 
@@ -96,6 +101,7 @@ namespace MLPCPU
 
                             opt.Update(i, exec.ArgmentArrays[i], exec.GradientArrays[i]);
                         }
+
                     }
 
                     sw.Stop();
@@ -124,26 +130,34 @@ namespace MLPCPU
 
         private static Symbol Mlp(IList<int> layers)
         {
-            var x = Symbol.Variable("X");
+            //var x = Symbol.Variable("X");
             var label = Symbol.Variable("label");
 
-            var weights = new Symbol[layers.Count];
-            var biases = new Symbol[layers.Count];
-            var outputs = new Symbol[layers.Count];
+            //var weights = new Symbol[layers.Count];
+            //var biases = new Symbol[layers.Count];
+            //var outputs = new Symbol[layers.Count];
 
-            for (var i = 0; i < layers.Count; ++i)
-            {
-                weights[i] = Symbol.Variable("w" + i);
-                biases[i] = Symbol.Variable("b" + i);
-                Symbol fc = Operators.FullyConnected(
-                    i == 0 ? x : outputs[i - 1],  // data
-                    weights[i],
-                    biases[i],
-                    layers[i]);
-                outputs[i] = i == layers.Count - 1 ? fc : Operators.Activation(fc, ActivationActType.Relu);
-            }
+            //for (var i = 0; i < layers.Count; ++i)
+            //{
+            //    weights[i] = Symbol.Variable("w" + i);
+            //    biases[i] = Symbol.Variable("b" + i);
+            //    Symbol fc = Operators.FullyConnected(
+            //        i == 0 ? x : outputs[i - 1],  // data
+            //        weights[i],
+            //        biases[i],
+            //        layers[i]);
+            //    outputs[i] = i == layers.Count - 1 ? fc : Operators.Activation(fc, ActivationActType.Relu);
+            //}
 
-            return Operators.SoftmaxOutput(outputs.Last(), label);
+            //return Operators.SoftmaxOutput(outputs.Last(), label);
+
+            var model = new Sequential(new Shape(28 * 28), 10);
+            model.AddHidden(new Dense(28 * 28, ActivationType.ReLU, new GlorotUniform()));
+            model.AddHidden(new Dense(2 * 28 * 28, ActivationType.ReLU, new GlorotUniform()));
+
+            model.Compile(OptimizerType.SGD,  LossType.CategorialCrossEntropy, null);
+            //return Operators.SoftmaxOutput(model.compiledModel, label);
+            return model.CompiledModel;
         }
 
         #endregion

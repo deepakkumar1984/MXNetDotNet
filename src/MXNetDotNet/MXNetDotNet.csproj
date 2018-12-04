@@ -34,10 +34,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Numerics\Base\Shape.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="cublas64_80.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

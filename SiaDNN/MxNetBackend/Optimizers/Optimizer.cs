@@ -90,12 +90,12 @@ namespace MXNetDotNet
             if (null != this.LearningRateScheduler)
                 return this.LearningRateScheduler.Ptr.GetLearningRate(this.NumUpdate);
 
-            return float.Parse(this.Params["lr"]);
+            return float.Parse(this.Params["lr"].Replace("f", ""));
         }
 
         protected float GetWeightDecay(int index)
         {
-            var wd = float.Parse(this.Params["wd"]);
+            var wd = float.Parse(this.Params["wd"].Replace("f", ""));
             return wd;
         }
 
